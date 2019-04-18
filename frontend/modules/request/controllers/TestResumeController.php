@@ -9,6 +9,7 @@ use common\models\Resume;
 use common\models\ResumeCategory;
 use common\models\ResumeSkill;
 use common\models\Skill;
+use common\models\TestResume;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
@@ -16,15 +17,14 @@ use yii\rest\IndexAction;
 use yii\web\HttpException;
 use yii\web\ServerErrorHttpException;
 
-class ResumeController extends MyActiveController
+class TestResumeController extends MyActiveController
 {
-    public $modelClass = 'common\models\Resume';
+    public $modelClass = 'common\models\TestResume';
 
     public function actions()
     {
         $actions = parent::actions();
         unset($actions['create']);
-        unset($actions['update']);
         return $actions;
     }
 
@@ -44,16 +44,24 @@ class ResumeController extends MyActiveController
      * @throws ServerErrorHttpException
      * @throws HttpException
      */
-    public function actionCreate(){
-        $model = new Resume();
+    public function actionCreate()
+    {
+        $model = new TestResume();
         $params = Yii::$app->getRequest()->getBodyParams();
-        if(Yii::$app->user->isGuest)
-            throw new HttpException(400, 'Пользователь не авторизирован');
-        $employer = Employer::findOne(['user_id'=>Yii::$app->user->identity->getId()]);
-        if(!$employer)
-            throw new HttpException(400, 'Вы не являетесь соискателем');
         $model->load($params, '');
-        $model->employer_id = $employer->id;
+        if ($params['image']) {
+            $data = explode(',', $params['image']['dataUrl']);
+            $image = base64_decode($data[1]);
+            $dir = '__DIR__ ../../../web/media/';
+            $file_name = time();
+            $file_type = explode('/', $params['image']['type'])[1];
+            if (!file_exists($dir))
+                mkdir($dir);
+            $file = fopen($dir . $file_name . '.' . $file_type, "wb");
+            fwrite($file, $image);
+            fclose($file);
+        $model->image_url = '/media/' . $file_name . '.' . $file_type;
+        }
         if($model->save()){
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
@@ -81,9 +89,9 @@ class ResumeController extends MyActiveController
                     $resume_category->save();
                 }
             }
-            if($params['skills']){
+            if($params['skill']){
                 ResumeSkill::deleteAll(['resume_id' => $model->id]);
-                foreach($params['skills'] as $s_skill){
+                foreach($params['skill'] as $s_skill){
                     if(!$skill = Skill::find()->where(['name' => $s_skill['name']])->one()){
                         $skill = new Skill();
                         $skill->name = $s_skill['name'];

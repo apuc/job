@@ -32,6 +32,10 @@
     props: {
       value: {
         type: [Object],
+      },
+      inputDisabled: {
+        type: String,
+        default: '',
       }
     },
     components: {Social},

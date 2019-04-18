@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container>
+      <v-container>
       <ul class="nav-menu">
         <li v-for="link in linkMenu" :key="link.title">
           <router-link :to="link.url">{{ link.title }}</router-link>
@@ -18,26 +18,11 @@ export default {
   components: {},
   data () {
     return {
+      drawer: null,
       linkMenu: [
         {
-          title: 'Главная',
-          url: '/'
-        },
-        {
-          title: 'Добавить вакансию',
-          url: '/add-vacancy'
-        },
-        {
           title: 'Добавить резюме',
-          url: '/add-resume'
-        },
-        {
-          title: 'Добавить компания',
-          url: '/add-company'
-        },
-        {
-          title: 'Все резюме',
-          url: '/all-resume'
+          url: '/'
         },
       ],
     }
@@ -55,6 +40,10 @@ export default {
   }
   .nav-menu li a {
     color: #000000;
+    text-decoration: none;
+  }
+  .v-list__tile__title a {
+    color: inherit;
     text-decoration: none;
   }
 </style>

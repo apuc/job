@@ -54,6 +54,10 @@
     props: {
       value: {
         type: [Array],
+      },
+      inputDisabled: {
+        type: String,
+        default: '',
       }
     },
     methods: {

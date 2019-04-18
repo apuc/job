@@ -1,5 +1,5 @@
 {
-  "name": "lk-work",
+  "name": "create-resume",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,22 +8,20 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^2.6.6",
+    "core-js": "^2.6.5",
+    "vue": "^2.6.10",
     "vue-image-upload-resize": "^2.0.4",
     "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.1",
-    "vuetify": "^1.5.5",
-    "vuex": "^3.0.1"
+    "vue-router": "^3.0.3",
+    "vuetify": "^1.5.5"
   },
   "devDependencies": {
-    "@mdi/font": "^3.5.95",
-    "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-plugin-eslint": "^3.5.0",
-    "@vue/cli-service": "^3.5.0",
+    "@vue/cli-plugin-babel": "^3.6.0",
+    "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-service": "^3.6.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
+    "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "material-design-icons-iconfont": "^4.0.5",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-cli-plugin-vuetify": "^0.5.0",

@@ -3,6 +3,7 @@
     ref="form"
     v-model="valid"
     lazy-validation
+    :class="dopClass"
   >
     <slot />
     <component v-for="(input, index) in formTemplate()"
@@ -20,6 +21,9 @@
                :mask="input.maskPhone"
                :class="input.class"
                :type="input.type"
+               :attach="input.attach"
+               :multiple="input.multiple"
+               :chips="input.chips"
                v-model="value[index]"
     >
       {{ input.text }}
@@ -49,7 +53,14 @@
       value: {
         type: Object,
       },
-
+      dopClass: {
+        type: String,
+        default: '',
+      },
+      inputDisabled: {
+        type: String,
+        default: '',
+      }
     },
     methods: {
       formTemplate() {

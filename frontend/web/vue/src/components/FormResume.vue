@@ -13,7 +13,7 @@
       @input="setImage"
     >
       <label for="fileInput" slot="upload-label">
-        <span class="upload-caption">Выбрать фото <img src="../assets/login.png"></span>
+        <span class="upload-caption">Выбрать фото</span>
       </label>
     </image-uploader>
 
@@ -28,11 +28,24 @@
     name: 'FormResume',
     mixins: [Resume],
     components: {FormTemplate},
+    created() {
+      this.getEmploymentType().then(response => {
+        FormResume.categoriesResume.items = response.data;
+        for (let i = 0; i < response.data.length; i++) {
+          this.$set(FormResume.categoriesResume.items, i, response.data[i]);
+        }
+      });
+    },
     methods: {
       saveData() {
         let data = {
-          image_url: '',
+          image: this.image,
+          first_name: this.formData.name,
+          second_name: this.formData.surname,
+          phone: this.formData.phone,
+          email: this.formData.email,
           title: this.formData.careerObjective,
+          category: this.formData.categoriesResume,
           min_salary: this.formData.salaryFrom.replace(",","."),
           max_salary: this.formData.salaryBefore.replace(",","."),
           description: this.formData.aboutMe,
@@ -42,40 +55,32 @@
           skype: this.formData.addSocial.skype,
           education: this.formData.educationBlock,
           work: this.formData.workBlock,
-          skills: [],
+          skill: [],
         };
-        let image = document.querySelector('.fileinput');
-        if(image.classList.contains('fileinput--loaded')) {
-          data.image_url = this.image.name;
-        }
 
         let dutiesVal = document.querySelectorAll('.duties input');
         for (let i = 0; i < dutiesVal.length; i++) {
           if (dutiesVal[i].value !== '') {
-            data.skills.push({name: dutiesVal[i].value})
+            data.skill.push({name: dutiesVal[i].value})
           }
         }
-        this.$http.post(`${process.env.VUE_APP_API_URL}/request/resume`, data)
+        this.$http.post(`${process.env.VUE_APP_API_URL}/request/test-resume`, data)
           .then(response => {
-              console.log(response);
-              console.log('Форма успешно отправлена');
+              this.$router.push({name: 'view-resume', params: {id: response.data.id}});
             }, response => {
-              console.log(response);
-              console.log('Форма не отправлена');
             }
           )
       },
       getFormData() {
         return FormResume;
       },
+      async getEmploymentType() {
+        return await this.$http.get(`${process.env.VUE_APP_API_URL}/request/category`);
+      },
       setImage: function(output) {
         this.hasImage = true;
         this.image = output;
       },
-      // setValue(data) {
-      //   console.log('setValue --->', data)
-      //   this.formData.careerObjective = data.title;
-      // }
     },
   }
 </script>
@@ -85,7 +90,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 20px;
   }
   #fileInput {
     display: none;
